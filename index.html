@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Code Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism-okaidia.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        #editor-container {
+            display: flex;
+        }
+
+        #code-editor, #preview {
+            width: 50%;
+            height: 100vh;
+            box-sizing: border-box;
+            padding: 10px;
+            overflow: auto;
+            line-height: 1.5;
+        }
+
+        #code-editor {
+            background-color: #2d2d2d;
+            border: 1px solid #454545;
+            color: #d4d4d4;
+            white-space: pre-wrap;
+            position: relative;
+        }
+
+        .line-numbers {
+            counter-reset: line;
+            float: left;
+            margin-right: 10px;
+            color: #75715e;
+        }
+
+        .line-numbers span:before {
+            content: counter(line);
+            counter-increment: line;
+            display: block;
+            padding-right: 5px;
+            text-align: right;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="editor-container">
+        <div class="line-numbers"></div>
+        <textarea id="code-editor" oninput="updatePreview()"></textarea>
+        <iframe id="preview"></iframe>
+    </div>
+
+    <script src="https://unpkg.com/prismjs@1.23.0/prism.js"></script>
+    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-html.min.js"></script>
+    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-css.min.js"></script>
+    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-javascript.min.js"></script>
+
+    <script>
+        const codeEditor = document.getElementById('code-editor');
+        const previewFrame = document.getElementById('preview');
+
+        function updatePreview() {
+            const code = codeEditor.value;
+            const previewDocument = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            
+            previewDocument.open();
+            previewDocument.write(code);
+            previewDocument.close();
+            
+            Prism.highlightAll();
+            updateLineNumbers();
+        }
+
+        function updateLineNumbers() {
+            const lineNumbers = document.querySelector('.line-numbers');
+            const codeLines = codeEditor.value.split('\n').length;
+            lineNumbers.innerHTML = Array.from({ length: codeLines }, (_, i) => `<span></span>`).join('');
+        }
+    </script>
+</body>
+</html>
