@@ -61,6 +61,15 @@
             border: none;
             padding: 10px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button.on {
+            background-color: #5cb85c; /* Green */
+        }
+
+        button.off {
+            background-color: #d9534f; /* Red */
         }
 
         @media only screen and (max-width: 600px) {
@@ -77,6 +86,7 @@
         const codeEditor = document.getElementById('code-editor');
         const previewFrame = document.getElementById('preview');
         const tailwindScript = document.getElementById('tailwind-script');
+        const toggleButton = document.getElementById('toggle-button');
 
         function updatePreview() {
             const code = codeEditor.value;
@@ -101,8 +111,12 @@
 
             if (tailwindEnabled) {
                 tailwindScript.removeAttribute('src');
+                toggleButton.classList.remove('on');
+                toggleButton.classList.add('off');
             } else {
                 tailwindScript.setAttribute('src', 'https://cdn.tailwindcss.com');
+                toggleButton.classList.remove('off');
+                toggleButton.classList.add('on');
             }
 
             updatePreview();
@@ -116,7 +130,7 @@
         <iframe id="preview"></iframe>
     </div>
 
-    <button onclick="toggleTailwindCDN()">Toggle Tailwind CDN</button>
+    <button id="toggle-button" onclick="toggleTailwindCDN()">Toggle Tailwind CDN</button>
 
     <script src="https://unpkg.com/prismjs@1.23.0/prism.js"></script>
     <script src="https://unpkg.com/prismjs@1.23.0/components/prism-html.min.js"></script>
