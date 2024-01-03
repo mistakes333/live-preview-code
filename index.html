@@ -55,6 +55,14 @@
             border: none;
         }
 
+        button {
+            background-color: #4d4d4d;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
         @media only screen and (max-width: 600px) {
             #editor-container {
                 flex-direction: column;
@@ -65,31 +73,19 @@
             }
         }
     </style>
-</head>
-<body>
-    <div id="editor-container">
-        <div class="line-numbers"></div>
-        <textarea id="code-editor" oninput="updatePreview()"></textarea>
-        <iframe id="preview"></iframe>
-    </div>
-
-    <script src="https://unpkg.com/prismjs@1.23.0/prism.js"></script>
-    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-html.min.js"></script>
-    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-css.min.js"></script>
-    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-javascript.min.js"></script>
-
     <script>
         const codeEditor = document.getElementById('code-editor');
         const previewFrame = document.getElementById('preview');
+        const tailwindScript = document.getElementById('tailwind-script');
 
         function updatePreview() {
             const code = codeEditor.value;
             const previewDocument = previewFrame.contentDocument || previewFrame.contentWindow.document;
-            
+
             previewDocument.open();
             previewDocument.write(code);
             previewDocument.close();
-            
+
             Prism.highlightAll();
             updateLineNumbers();
         }
@@ -99,6 +95,34 @@
             const codeLines = codeEditor.value.split('\n').length;
             lineNumbers.innerHTML = Array.from({ length: codeLines }, (_, i) => `<span></span>`).join('');
         }
+
+        function toggleTailwindCDN() {
+            const tailwindEnabled = tailwindScript.getAttribute('src') !== null;
+
+            if (tailwindEnabled) {
+                tailwindScript.removeAttribute('src');
+            } else {
+                tailwindScript.setAttribute('src', 'https://cdn.tailwindcss.com');
+            }
+
+            updatePreview();
+        }
     </script>
+</head>
+<body>
+    <div id="editor-container">
+        <div class="line-numbers"></div>
+        <textarea id="code-editor" oninput="updatePreview()"></textarea>
+        <iframe id="preview"></iframe>
+    </div>
+
+    <button onclick="toggleTailwindCDN()">Toggle Tailwind CDN</button>
+
+    <script src="https://unpkg.com/prismjs@1.23.0/prism.js"></script>
+    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-html.min.js"></script>
+    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-css.min.js"></script>
+    <script src="https://unpkg.com/prismjs@1.23.0/components/prism-javascript.min.js"></script>
+
+    <script id="tailwind-script"></script>
 </body>
 </html>
